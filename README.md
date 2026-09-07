@@ -1,44 +1,52 @@
 # Personal site — Ibrahim Abdul Majeed, PhD
 
-Single-page portfolio hosted on GitHub Pages. No build step, no dependencies — plain HTML with inline CSS and about 60 lines of vanilla JS.
+**Live page → <https://ibrahimcal.github.io/>**
+Repo → <https://github.com/ibrahimcal/ibrahimcal.github.io>
+
+Single-page portfolio hosted on GitHub Pages. Built with **Next.js 16 (static export) + React 19 + Tailwind CSS 4**, motion by [`motion`](https://motion.dev), dark/light themes via `next-themes`. The original hand-written `index.html` is kept at the repo root for reference — the app now lives in `app/`, `components/` and `data/`.
+
+## Stack
+
+| Piece | Choice |
+|---|---|
+| Framework | Next.js 16, App Router, `output: 'export'` → `out/` |
+| UI | React 19, Tailwind CSS 4 (`@theme inline` in `app/globals.css`, no config file) |
+| Motion | `motion/react` — `BlurFade` scroll reveals + magnifying `Dock` (Magic UI pattern) |
+| Theme | `next-themes`, dark default (void/brass), derived light theme |
+| Content | All copy lives in `data/resume.tsx` as a typed `DATA` object |
+
+## Develop
+
+```bash
+npm install
+npm run dev    # http://localhost:3000
+npm run build  # static export to out/
+npm run lint
+```
+
+Use `npm run dev` while editing—the browser updates as you save. To preview the
+production export locally after `npm run build`, serve the `out/` folder with
+any static server, for example `python3 -m http.server 3000 --directory out`.
 
 ## Files
 
-| File | What it is |
+| Path | What it is |
 |---|---|
-| `index.html` | The whole site. Edit this to change any content. |
-| `profile.webp` | Portrait, served to modern browsers (~140 KB) |
-| `profile.png` | Same portrait, fallback for older browsers |
-| `og-image.jpg` | Social preview card shown on LinkedIn / WhatsApp / X |
-| `Ibrahim_Abdul_Majeed_CV.pdf` | **You need to add this** — the résumé buttons link to it |
-
-## Before you publish — two things
-
-1. **Add `Ibrahim_Abdul_Majeed_CV.pdf`** to the repo root. If you'd rather name it something else, update the four `href="Ibrahim_Abdul_Majeed_CV.pdf"` links.
-2. **Check the phone and email** — `ibrahim.am@gmail.com` and `+966538381418` appear in the hero, the contact section, the mobile dock, and the structured-data block at the top.
+| `data/resume.tsx` | **Edit this to change any content** — hero, metrics, work, builds, experience, toolkit, research, contact |
+| `app/layout.tsx` | Metadata, OG/Twitter, JSON-LD, typography loading (Fraunces + IBM Plex) |
+| `app/globals.css` | Design tokens — dark palette in `:root`, light overrides in `.light` |
+| `components/sections/` | One file per page section |
+| `components/magicui/` | `blur-fade.tsx` (scroll reveals), `dock.tsx` (magnifying dock) |
+| `public/` | `profile.webp` / `profile.png`, `og-image.jpg`, `Ibrahim_Abdul_Majeed_CV.pdf`, `robots.txt`, `sitemap.xml`, `.nojekyll` |
+| `index.html` | The original single-file site, kept for reference |
 
 ## Deploying
 
-```bash
-# in the folder containing these files
-git init
-git add .
-git commit -m "Personal site"
-git branch -M main
-git remote add origin https://github.com/ibrahimcal/ibrahimcal.github.io.git
-git push -u origin main
-```
+Push to `main`. `.github/workflows/deploy.yml` builds the static export and publishes `out/` to GitHub Pages. In the repo: **Settings → Pages → Source: GitHub Actions**.
 
-The repository **must** be named `ibrahimcal.github.io` (all lowercase, matching the username) for the site to appear at `https://ibrahimcal.github.io`. Then in the repo: **Settings → Pages → Source: Deploy from a branch → `main` / `(root)` → Save.**
-
-First build takes 1–3 minutes. After that, every `git push` redeploys in under a minute.
-
-## Updating later
-
-Everything lives in `index.html`. The sections are marked with comment banners (`<!-- ══ WORK ══ -->`) so they're easy to find. To add a project, copy an existing `<article class="card">` block and edit it. To add a job, copy an `<article class="job">` block — the `now` class is what makes the marker gold, so keep it only on the top entry.
+The repository **must** be named `ibrahimcal.github.io` (all lowercase, matching the username) for the site to appear at `https://ibrahimcal.github.io`.
 
 ## Notes
 
-- Colour tokens are the `:root` variables at the top of the `<style>` block. Changing `--brass` re-themes the whole page.
-- Fonts load from Google Fonts (Fraunces for display, IBM Plex Sans for body). The page degrades gracefully to system fonts if they fail.
+- Colour tokens are the CSS variables in `app/globals.css`. Changing `--brass` re-themes the whole page (both themes).
 - Respects `prefers-reduced-motion`, keyboard-focusable throughout, and works down to a 320 px viewport.
